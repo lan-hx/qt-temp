@@ -40,6 +40,9 @@ set_target_properties(qt_temp PROPERTIES
 )
 
 if(WIN32)
-    add_custom_command(TARGET qt_temp POST_BUILD COMMAND "${QT_PREFIX_DIR}/bin/windeployqt.exe" $<TARGET_FILE:qt_temp>)
+    set(QT_DEPLOY_EXE "${QT_PREFIX_DIR}/bin/windeployqt.exe")
+    message("QT_DEPLOY_EXE: ${QT_DEPLOY_EXE}")
+    add_custom_command(TARGET qt_temp POST_BUILD
+            COMMAND ${QT_DEPLOY_EXE} $<TARGET_FILE:qt_temp>)
 endif()
 
