@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 
-set(CMAKE_PREFIX_PATH "${QT_MY_DIR}/lib/cmake")
+message("Qt5_DIR: ${Qt5_DIR}")
+set(QT_PREFIX_DIR ${Qt5_DIR})
+list(APPEND CMAKE_PREFIX_PATH "${Qt5_DIR}/lib/cmake")
 
 project(qt_temp VERSION 0.1 LANGUAGES CXX)
 
@@ -61,6 +63,6 @@ if(QT_VERSION_MAJOR EQUAL 6)
 endif()
 
 if(WIN32)
-    add_custom_command(TARGET qt_temp POST_BUILD COMMAND ${QT_MY_DIR}/bin/windeployqt.exe $<TARGET_FILE:qt_temp>)
+    add_custom_command(TARGET qt_temp POST_BUILD COMMAND ${QT_PREFIX_DIR}/bin/windeployqt.exe $<TARGET_FILE:qt_temp>)
 endif()
 
