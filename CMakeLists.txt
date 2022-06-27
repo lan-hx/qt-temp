@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 
 message("Qt5_DIR: ${Qt5_DIR}")
 set(QT_PREFIX_DIR "${Qt5_DIR}/../..")
+message("QT_PREFIX_DIR: ${QT_PREFIX_DIR}")
 list(APPEND CMAKE_PREFIX_PATH ${Qt5_DIR})
 
 project(qt_temp VERSION 0.1 LANGUAGES CXX)
