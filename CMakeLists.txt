@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 
 message("Qt5_DIR: ${Qt5_DIR}")
-set(QT_PREFIX_DIR ${Qt5_DIR})
-list(APPEND CMAKE_PREFIX_PATH "${Qt5_DIR}/lib/cmake")
+set(QT_PREFIX_DIR "${Qt5_DIR}/../..")
+list(APPEND CMAKE_PREFIX_PATH ${Qt5_DIR})
 
 project(qt_temp VERSION 0.1 LANGUAGES CXX)
 
@@ -15,8 +15,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(Qt5 CONFIG REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
         main.cpp
@@ -25,30 +24,11 @@ set(PROJECT_SOURCES
         mainwindow.ui
 )
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(qt_temp
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-    )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET qt_temp APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
-else()
-    if(ANDROID)
-        add_library(qt_temp SHARED
-            ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
-        add_executable(qt_temp
-            ${PROJECT_SOURCES}
-        )
-    endif()
-endif()
+add_executable(qt_temp
+    ${PROJECT_SOURCES}
+)
 
-target_link_libraries(qt_temp PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(qt_temp PRIVATE Qt5::Widgets)
 
 set_target_properties(qt_temp PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
@@ -57,10 +37,6 @@ set_target_properties(qt_temp PROPERTIES
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
 )
-
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(qt_temp)
-endif()
 
 if(WIN32)
     add_custom_command(TARGET qt_temp POST_BUILD COMMAND ${QT_PREFIX_DIR}/bin/windeployqt.exe $<TARGET_FILE:qt_temp>)
